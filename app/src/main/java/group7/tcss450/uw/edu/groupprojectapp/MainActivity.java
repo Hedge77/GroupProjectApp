@@ -1,5 +1,6 @@
 package group7.tcss450.uw.edu.groupprojectapp;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +21,7 @@ public class MainActivity extends AppCompatActivity
                                             StartFragment.OnFragmentInteractionListener{
 
     private static final String PARTIAL_URL
-            = "http://cssgate.insttech.washington.edu/" +
-            "~jisus/login";
+            = "http://cssgate.insttech.washington.edu/" + "~jisus/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +92,7 @@ public class MainActivity extends AppCompatActivity
                     response += s;
                 }
             } catch (Exception e) {
-                response = "Unable to connect, Reason: "
-                        + e.getMessage();
+                response = "Unable to connect, Reason: " + e.getMessage();
             } finally {
                 if (urlConnection != null)
                     urlConnection.disconnect();
@@ -113,6 +112,7 @@ public class MainActivity extends AppCompatActivity
                         "Wrong username or password", Toast.LENGTH_LONG).show();
                 return;
             }
+            startActivity(new Intent(MainActivity.this, Main2Activity.class));
         }
     }
 
@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity
                         .show();
                 return;
             }
+            startActivity(new Intent(MainActivity.this, Main2Activity.class));
         }
     }
 
