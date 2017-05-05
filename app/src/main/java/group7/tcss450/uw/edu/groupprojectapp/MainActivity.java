@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -110,8 +109,8 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
             if (result.equals("")) {
-                Toast.makeText(getApplicationContext(), "Wrong username or password", Toast.LENGTH_LONG)
-                        .show();
+                Toast.makeText(getApplicationContext(),
+                        "Wrong username or password", Toast.LENGTH_LONG).show();
                 return;
             }
         }
@@ -156,7 +155,6 @@ public class MainActivity extends AppCompatActivity
         }
         @Override
         protected void onPostExecute(String result) {
-            // Something wrong with the network or the URL.
             if (result.startsWith("Unable to")) {
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
@@ -167,8 +165,6 @@ public class MainActivity extends AppCompatActivity
                         .show();
                 return;
             }
-            Log.d("TEST", result);
-
         }
     }
 
