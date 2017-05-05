@@ -1,9 +1,15 @@
 <resources>
-    <string name="app_name">GroupProjectApp</string>
+    <string name="app_name">ChallangeApp</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="login_button">Login</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="sign_in_button">Sign In</string>
+    <string name="sign_up_button">Sign Up</string>
+    <string name="name_key">namekey</string>
+    <string name="pass_key">passkey</string>
+    <string name="showid_key">showidkey</string>
+    <string name="json_key">jsonkey</string>
 
-    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

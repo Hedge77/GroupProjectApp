@@ -1,101 +1,181 @@
 package group7.tcss450.uw.edu.groupprojectapp;
 
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.os.AsyncTask;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+                            implements SignInFragment.OnFragmentInteractionListener,
+                                        SignUpFragment.OnFragmentInteractionListener,
+                                            StartFragment.OnFragmentInteractionListener{
+
+    private static final String PARTIAL_URL
+            = "http://cssgate.insttech.washington.edu/" +
+            "~jisus/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+        if(savedInstanceState == null) {
+            if (findViewById(R.id.fragmentContainer) != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragmentContainer, new StartFragment())
+                        .commit();
             }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    public void onFragmentInteraction(String button, String username, String pwd) {
+        Log.d("ACTIVITY", button);
+        if(button == "signin"){
+            SignInFragment frag2;
+            frag2 =  new SignInFragment();
+            Bundle args = new Bundle();
+            //args.putSerializable(getString(R.string.color_key), color);
+            frag2.setArguments(args);
+            FragmentTransaction transaction = getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, frag2)
+                    .addToBackStack(null);
+            // Commit the transaction
+            transaction.commit();
         }
-
-        return super.onOptionsItemSelected(item);
+        if(button == "signup"){
+            SignInFragment frag3;
+            frag3 =  new SignInFragment();
+            Bundle args = new Bundle();
+            //args.putSerializable(getString(R.string.color_key), color);
+            frag3.setArguments(args);
+            FragmentTransaction transaction = getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, frag3)
+                    .addToBackStack(null);
+            // Commit the transaction
+            transaction.commit();
+        }
+        if(button == "display1") {
+            AsyncTask<String, Void, String> task = null;
+            task = new GetWebServiceTask();
+            task.execute(PARTIAL_URL, username, pwd);
+        }
+        if(button == "display2") {
+            AsyncTask<String, Void, String> task = null;
+            task = new PostWebServiceTask();
+            task.execute(PARTIAL_URL, username, pwd);
+        }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+    private class GetWebServiceTask extends AsyncTask<String, Void, String> {
+        private final String SERVICE = "_get.php";
+        @Override
+        protected String doInBackground(String... strings) {
+            if (strings.length != 3) {
+                throw new IllegalArgumentException("Three String arguments required.");
+            }
+            String response = "";
+            HttpURLConnection urlConnection = null;
+            String url = strings[0];
+            String args = "?my_id=" + strings[1] + "&my_pwd=" + strings[2];
+            try {
+                URL urlObject = new URL(url + SERVICE + args);
+                urlConnection = (HttpURLConnection) urlObject.openConnection();
+                InputStream content = urlConnection.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+                String s = "";
+                while ((s = buffer.readLine()) != null) {
+                    response += s;
+                }
+            } catch (Exception e) {
+                response = "Unable to connect, Reason: "
+                        + e.getMessage();
+            } finally {
+                if (urlConnection != null)
+                    urlConnection.disconnect();
+            }
+            return response;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            // Something wrong with the network or the URL.
+            if (result.startsWith("Unable to")) {
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
+                        .show();
+                return;
+            }
+            if (result.equals("")) {
+                Toast.makeText(getApplicationContext(), "Wrong username or password", Toast.LENGTH_LONG)
+                        .show();
+                return;
+            }
+        }
+    }
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+    private class PostWebServiceTask extends AsyncTask<String, Void, String> {
+        private final String SERVICE = "_post.php";
+        @Override
+        protected String doInBackground(String... strings) {
+            if (strings.length != 3) {
+                throw new IllegalArgumentException("Three String arguments required.");
+            }
+            String response = "";
+            HttpURLConnection urlConnection = null;
+            String url = strings[0];
+            try {
+                URL urlObject = new URL(url + SERVICE);
+                urlConnection = (HttpURLConnection) urlObject.openConnection();
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
+                String data = URLEncoder.encode("my_id", "UTF-8")
+                        + "=" + URLEncoder.encode(strings[1], "UTF-8")
+                        + "&" + URLEncoder.encode("my_pwd", "UTF-8")
+                        + "=" + URLEncoder.encode(strings[2], "UTF-8");
+                wr.write(data);
+                wr.flush();
+                InputStream content = urlConnection.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+                String s = "";
+                while ((s = buffer.readLine()) != null) {
+                    response += s;
+                }
+            } catch (Exception e) {
+                response = "Unable to connect, Reason: "
+                        + e.getMessage();
+            } finally {
+                if (urlConnection != null)
+                    urlConnection.disconnect();
+            }
+            return response;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            // Something wrong with the network or the URL.
+            if (result.startsWith("Unable to")) {
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
+                        .show();
+                return;
+            }
+            if (result.startsWith("INSERT")) {
+                Toast.makeText(getApplicationContext(), "Already exist!", Toast.LENGTH_LONG)
+                        .show();
+                return;
+            }
+            Log.d("TEST", result);
 
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
+
 }
