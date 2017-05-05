@@ -43,9 +43,6 @@ public class MainActivity extends AppCompatActivity
         if(button == "signin"){
             SignInFragment frag2;
             frag2 =  new SignInFragment();
-            Bundle args = new Bundle();
-            //args.putSerializable(getString(R.string.color_key), color);
-            frag2.setArguments(args);
             FragmentTransaction transaction = getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragmentContainer, frag2)
@@ -54,11 +51,8 @@ public class MainActivity extends AppCompatActivity
             transaction.commit();
         }
         if(button == "signup"){
-            SignInFragment frag3;
-            frag3 =  new SignInFragment();
-            Bundle args = new Bundle();
-            //args.putSerializable(getString(R.string.color_key), color);
-            frag3.setArguments(args);
+            SignUpFragment frag3;
+            frag3 =  new SignUpFragment();
             FragmentTransaction transaction = getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragmentContainer, frag3)
