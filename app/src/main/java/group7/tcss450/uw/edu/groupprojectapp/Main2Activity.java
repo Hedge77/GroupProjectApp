@@ -258,6 +258,42 @@ public class Main2Activity extends AppCompatActivity
         task.execute(word);
     }
 
+    private void sendResults(List<Item> items) {
+        StringBuilder sb = new StringBuilder();
+        for(Item i : items) {
+            sb.append(i.toString());
+            sb.append("\n\n\n");
+        }
+        String result = sb.toString();
+        Bundle args = new Bundle();
+        args.putString(getString(R.string.items_key), result);
+
+        DisplayResultsFragment frag;
+        frag =  new DisplayResultsFragment();
+        frag.setArguments(args);
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_container, frag)
+                .addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
+    }
+
+    private void sendResults(String s) {
+        Bundle args = new Bundle();
+        args.putString(getString(R.string.items_key), s);
+
+        DisplayResultsFragment frag;
+        frag =  new DisplayResultsFragment();
+        frag.setArguments(args);
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_container, frag)
+                .addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
+    }
+
     /**
      * EbayWebServiceTask
      *
@@ -322,11 +358,16 @@ public class Main2Activity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                 return;
             }
-            List<Item> ebayItems = Item.ebayJsonToItems(result);
+//            List<Item> ebayItems = Item.ebayJsonToItems(result);
+//
+//            for(int i = 0; i < ebayItems.size(); i++) {
+//                if (mSearchResults != null) {
+//                    mSearchResults.clear();
+//                }
+//                mSearchResults.add(ebayItems.get(i));
+//            }
 
-            for(int i = 0; i < ebayItems.size(); i++) {
-                mSearchResults.add(ebayItems.get(i));
-            }
+            sendResults(result);
 
 
 
@@ -380,13 +421,9 @@ public class Main2Activity extends AppCompatActivity
             return response;
         }
 
-        /**
-         * onPostExecute method that brings the result from the Ebay webservice
-         *
-         * @param result The result getting from the webservice
-         */
         @Override
         protected void onPostExecute(String result) {
+            //something wrong with network or url
             if (result.startsWith("Unable to")) {
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                 return;
@@ -395,30 +432,20 @@ public class Main2Activity extends AppCompatActivity
         }
     }
 
-    /**
-     * createSignedURL method to get URL string for connecting to webservice.
-     *
-     * Unlike Ebay, amazon requires a complex signed URL using a timestamp and a MAC,
-     * and their documentation for what exactly is required is convoluted.
-     * After a lot of work I got this system working, but it returns XML only so more work
-     * is required before this can be implemented into the app.
-     *
-     * @param query The partial string to connect to webservice
-     * @return The whole URL to connect to webservice
-     */
     private String createSignedURL(String query) {
+        /*
+        Unlike Ebay, amazon requires a complex signed URL using a timestamp and a MAC,
+        and their documentation for what exactly is required is convoluted.
+        After a lot of work I got this system working, but it returns XML only so more work
+        is required before this can be implemented into the app.
+        -Ryan
+         */
 
-        /** The API key for connecting to the web service */
         final String key = "PqED+3g6+9q2brubA0tH6xfHi3jkT+NMt/EXxGAr";
-
-        /** The Partial URL string for connecting to the web service */
         String partialURL = "http://webservices.amazon.com/onca/xml?";
-
-        /** The arguments for connecting to the web service */
         String args = "AWSAccessKeyId=AKIAJ73DRUHHHGAK62PQ" +
                 "&AssociateTag=ry04-20" +
                 "&Keywords=";
-
         args += replaceSpaces(query);
         args += "&Operation=ItemSearch" +
                 "&ResponseGroup=Small" +
@@ -426,9 +453,7 @@ public class Main2Activity extends AppCompatActivity
                 "&Service=AWSECommerceService" +
                 "&Timestamp=";
 
-        /** The simpledateformat to format the date */
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'-07:00'");
-        /** The string object of datetime */
         String dateTime = dateFormat.format(new Date());
         //args += dateTime;
         //ex datetime
@@ -440,10 +465,8 @@ public class Main2Activity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        /** The string to sign to the URL */
         String stringToSign = "GET\nwebservices.amazon.com\n/onca/xml\n" + args;
 
-        /** The result for the URL */
         String result = "";
         try {
             Mac mac = Mac.getInstance("HmacSHA256");
@@ -463,12 +486,6 @@ public class Main2Activity extends AppCompatActivity
         return partialURL + args + "&Signature=" + result;
     }
 
-    /**
-     * replaceSpaces method to replace spaces for the URL for connecting to webservice.
-     *
-     * @param input The string to replace spaces
-     * @return The string that replaced spaces
-     */
     private String replaceSpaces(String input) {
         return input.replace(" ", "%20");
     }

@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -31,9 +32,6 @@ import model.Item;
  * @version 1.0
  */
 public class DisplayResultsFragment extends Fragment {
-
-    /** Private OnFragmentInteractionListener for this class  */
-    private OnFragmentInteractionListener mListener;
 
     /**
      * Empty Constructor for DisplayResultsFragment
@@ -57,13 +55,26 @@ public class DisplayResultsFragment extends Fragment {
         // Inflate the layout for this fragment
         View inflated = inflater.inflate(R.layout.fragment_display_results, container, false);
 
-        List<Item> items = null;
-        if(getArguments() != null) {
-            Bundle args = getArguments();
 
-        }
+
+
+
 
         return inflated;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        String items = null;
+        if(getArguments() != null) {
+            Bundle args = getArguments();
+            items = args.getString(getString(R.string.items_key));
+        }
+
+        TextView v = (TextView) getView().findViewById(R.id.displayResults);
+        v.setText(items);
     }
 
     /**
@@ -71,33 +82,33 @@ public class DisplayResultsFragment extends Fragment {
      *
      * @param context The context of the DisplayResultsFragment
      */
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
+//    }
 
-    /**
-     * Method to detach the context and set OnFragmentInteractionListener to null.
-     */
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * Interface to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     */
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
+//    /**
+//     * Method to detach the context and set OnFragmentInteractionListener to null.
+//     */
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//        mListener = null;
+//    }
+//
+//    /**
+//     * Interface to allow an interaction in this fragment to be communicated
+//     * to the activity and potentially other fragments contained in that
+//     * activity.
+//     *
+//     */
+//    public interface OnFragmentInteractionListener {
+//        void onFragmentInteraction(Uri uri);
+//    }
 }

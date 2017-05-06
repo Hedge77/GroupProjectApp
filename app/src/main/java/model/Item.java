@@ -27,6 +27,7 @@ public class Item {
     private String price;
     private String bestOfferEnabled;
     private String buyItNow;
+    private String json;
 
 
     private Item() {
@@ -35,7 +36,7 @@ public class Item {
 
     public static List<Item> ebayJsonToItems(String jsonString) {
         ArrayList<Item> result = new ArrayList<Item>();
-
+        Item nextItem;
         try {
             JSONObject json1 = new JSONObject(jsonString);
             JSONArray jsonArr1 = json1.getJSONArray("findItemsByKeywordsResponse");
@@ -44,15 +45,16 @@ public class Item {
             JSONObject json3 = jsonArr2.getJSONObject(0);
             int count = json3.getInt("@count");
             JSONArray items = json3.getJSONArray("item");
+//            json = items.toString();
             int maxDesired = 20;
             if (count < maxDesired) {
                 maxDesired = count;
             }
             for (int i = 0; i < maxDesired; i++) {
-                Item nextItem = new Item();
+                nextItem = new Item();
                 JSONObject next = items.getJSONObject(i);
 
-                JSONArray attribute = next.getJSONArray("itemID");
+                JSONArray attribute = next.getJSONArray("itemId");
                 nextItem.itemID = attribute.getString(0);
 
                 attribute = next.getJSONArray("title");
@@ -79,6 +81,8 @@ public class Item {
         } catch (JSONException e) {
             e.printStackTrace();
 
+        } finally {
+
         }
 
 
@@ -87,6 +91,18 @@ public class Item {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
+
+        sb.append(title);
+        sb.append('\n');
+        sb.append('$');
+        sb.append(price);
+        sb.append('\n');
+        sb.append(location);
+        sb.append('\n');
+        sb.append(itemURL);
+        sb.append('\n');
+        sb.append("BuyItNow: ");
+        sb.append(buyItNow);
 
         return null;
     }
