@@ -13,7 +13,7 @@ public class Item {
 
     }
 
-    public List<Item> ebayJsonToItems(String jsonString) {
+    public static List<Item> ebayJsonToItems(String jsonString) {
         ArrayList<Item> result = new ArrayList<Item>();
 
 
