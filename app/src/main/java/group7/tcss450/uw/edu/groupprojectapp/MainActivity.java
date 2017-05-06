@@ -1,3 +1,10 @@
+/**
+ * TCSS 450 Mobile Programming
+ * Project PhaseI Group 7
+ *
+ * @author Jisu Shin, Ryan Roe
+ * @version 1.0
+ */
 package group7.tcss450.uw.edu.groupprojectapp;
 
 import android.content.Intent;
