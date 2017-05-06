@@ -68,6 +68,13 @@ public class Main2Activity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if(savedInstanceState == null) {
+           if (findViewById(R.id.main_container) != null) {
+                getSupportFragmentManager().beginTransaction()
+                  .add(R.id.main_container, new SearchFragment()).commit();
+            }
+        }
     }
 
     @Override
