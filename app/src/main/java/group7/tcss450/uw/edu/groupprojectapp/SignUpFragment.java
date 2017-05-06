@@ -9,17 +9,42 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-
+/**
+ * SignUpFragment
+ *
+ * This fragment class is used to display sign-up screen
+ * and send username and password to MainActivity class.
+ *
+ * @author Jisu Shin
+ * @version 1.0
+ */
 public class SignUpFragment extends Fragment implements View.OnClickListener {
 
+    /** Private OnFragmentInteractionListener for this class  */
     private OnFragmentInteractionListener mListener;
+
+    /** The private object of EditText for username, password and confirming password  */
     private EditText name, pwd1, pwd2;
+
+    /** The private string object for username and password from EditText  */
     private String userName, passWord;
 
+    /**
+     * Empty Constructor for SignUpFragment
+     *
+     */
     public SignUpFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Method that creates a view for SignUpFragment and return the view
+     *
+     * @param inflater The LayoutInflater for creating view
+     * @param container The ViewGroup for creating view
+     * @param savedInstanceState The state of saved instance
+     * @return The view of the SignUpFragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -29,6 +54,12 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
         return v;
     }
 
+    /**
+     * Method to declare private EditText variables when the view is created.
+     *
+     * @param view The view of the SignUpFragment
+     * @param savedInstanceState The bundle of the view
+     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         name=(EditText) view.findViewById(R.id.username1);
@@ -36,6 +67,11 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
         pwd2=(EditText) view.findViewById(R.id.password2);
     }
 
+    /**
+     * Method to attach the context before OnFragmentInteraction.
+     *
+     * @param context The context of the SignUpFragment
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -47,53 +83,63 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * Method to detach the context and set OnFragmentInteractionListener to null.
+     */
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
+    /**
+     * Method to set onClick to sign-up button.
+     *
+     * @param view The view of the SignUpFragment
+     */
     @Override
     public void onClick(View view) {
+
+        // check if EditText for username is empty
         if(name.getText().toString().equals("")){
             name.setError("Field cannot be left blank.");
             return;
         }
+        // check if EditText for password is empty
         if(pwd1.getText().toString().equals("")){
             pwd1.setError("Field cannot be left blank.");
             return;
         }
+        // check if EditText for confirming password is empty
         if(pwd2.getText().toString().equals("")){
             pwd2.setError("Field cannot be left blank.");
             return;
         }
+        // check if EditTexts for both password and confirming password matches
         if(!pwd2.getText().toString().equals(pwd1.getText().toString())){
             pwd2.setError("Passwords have to be matched.");
             return;
         }
+        // get username and password from EditText
         userName = name.getText().toString();
         passWord = pwd1.getText().toString();
+
         if (mListener != null) {
             switch (view.getId()) {
                 case R.id.signupButton:
-                    mListener.onFragmentInteraction("display2", userName, passWord);
+                    mListener.onFragmentInteraction("post", userName, passWord);
                     break;
             }
         }
     }
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
+     * Interface to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     *
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(String fragment, String un, String pw);
+        void onFragmentInteraction(String purpose, String un, String pw);
     }
 }

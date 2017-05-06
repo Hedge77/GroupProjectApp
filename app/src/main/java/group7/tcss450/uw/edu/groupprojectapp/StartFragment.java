@@ -8,15 +8,36 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-
+/**
+ * StartFragment
+ *
+ * This fragment class is used to display start-up screen
+ * and send button name to MainActivity class.
+ *
+ * @author Jisu Shin
+ * @version 1.0
+ */
 public class StartFragment extends Fragment implements View.OnClickListener {
 
+    /** Private OnFragmentInteractionListener for this class  */
     private OnFragmentInteractionListener mListener;
 
+    /**
+     * Empty Constructor for StartFragment
+     *
+     */
     public StartFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Method that creates a view for StartFragment and return the view
+     *
+     * @param inflater The LayoutInflater for creating view
+     * @param container The ViewGroup for creating view
+     * @param savedInstanceState The state of saved instance
+     * @return The view of the StartFragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -28,6 +49,11 @@ public class StartFragment extends Fragment implements View.OnClickListener {
         return v;
     }
 
+    /**
+     * Method to attach the context before OnFragmentInteraction.
+     *
+     * @param context The context of the StartFragment
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -39,17 +65,26 @@ public class StartFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * Method to detach the context and set OnFragmentInteractionListener to null.
+     */
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
+    /**
+     * Method to set onClick to sign-in and sign-up buttons.
+     *
+     * @param view The view of the StartFragment
+     */
     @Override
     public void onClick(View view) {
         if (mListener != null) {
             switch (view.getId()) {
                 case R.id.signin:
+                    // no username and password yet
                     mListener.onFragmentInteraction("signin","","");
                     break;
                 case R.id.signup:
@@ -60,17 +95,13 @@ public class StartFragment extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
+     * Interface to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     *
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(String fragment, String s, String s1);
+        // send button name, username and password
+        void onFragmentInteraction(String button, String username, String pwd);
     }
 }
