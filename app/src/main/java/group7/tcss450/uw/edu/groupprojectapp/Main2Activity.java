@@ -1,5 +1,6 @@
 package group7.tcss450.uw.edu.groupprojectapp;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,9 +13,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class Main2Activity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SearchFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,5 +100,64 @@ public class Main2Activity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onFragmentInteraction(String s) {
+        //Async tasks call each other to ensure they are all finished before moving to next fragment
+        AsyncTask<String, Void, String> task = new EbayWebServiceTask();
+        task.execute(s);
+    }
+
+    private class EbayWebServiceTask extends AsyncTask<String, Void, String> {
+        private final String ebayUrl = "http://svcs.ebay.com/services/search/FindingService" +
+                "/v1?OPERATION-NAME=findItemsByKeywords&SERVICE-NAME=FindingService" +
+                "&SECURITY-APPNAME=RyanRoe-TestAppl-PRD-a09141381-6ccb26aa" +
+                "&RESPONSE-DATA-FORMAT=JSON" +
+                "&REST-PAYLOAD" +
+                "&keywords=";
+
+        @Override
+        protected String doInBackground(String... strings) {
+            if (strings.length != 1) {
+                throw new IllegalArgumentException("One string argument required");
+            }
+            String response = "";
+            HttpURLConnection urlConnection = null;
+            String args = replaceSpaces(strings[1]);
+            try {
+                URL urlObject = new URL(ebayUrl + args);
+                urlConnection = (HttpURLConnection) urlObject.openConnection();
+                InputStream content = urlConnection.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+                String s = "";
+                while ((s = buffer.readLine()) != null) {
+                    response += s;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //something wrong with network or url
+            if (result.startsWith("Unable to")) {
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+                return;
+            }
+
+
+        }
+    }
+
+    private String replaceSpaces(String input) {
+        return input.replace(" ", "%20");
     }
 }
