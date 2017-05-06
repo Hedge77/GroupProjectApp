@@ -50,6 +50,8 @@ public class Main2Activity extends AppCompatActivity
     private List<Item> mSearchResults;
     private Menu mMenu;
 
+    private String mSearchTerms;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,8 +244,15 @@ public class Main2Activity extends AppCompatActivity
             }
 
 
+
         }
     }
+
+    /*
+    Working, but not yet integrated into the app.  See note in method below.  In the future this will
+    be called from EbayWebServiceTask's onPostExecute().
+    -Ryan
+     */
 
     private class AmazonWebServiceTask extends AsyncTask<String, Void, String> {
 
@@ -253,7 +262,7 @@ public class Main2Activity extends AppCompatActivity
                 throw new IllegalArgumentException("One string argument required");
             }
             String amazonURL = createSignedURL(strings[1]);
-            Log.d("RESULT", amazonURL);
+//            Log.d("RESULT", amazonURL);
             String response = "";
             HttpURLConnection urlConnection = null;
             try {
@@ -288,6 +297,14 @@ public class Main2Activity extends AppCompatActivity
     }
 
     private String createSignedURL(String query) {
+        /*
+        Unlike Ebay, amazon requires a complex signed URL using a timestamp and a MAC,
+        and their documentation for what exactly is required is convoluted.
+        After a lot of work I got this system working, but it returns XML only so more work
+        is required before this can be implemented into the app.
+        -Ryan
+         */
+
         final String key = "PqED+3g6+9q2brubA0tH6xfHi3jkT+NMt/EXxGAr";
         String partialURL = "http://webservices.amazon.com/onca/xml?";
         String args = "AWSAccessKeyId=AKIAJ73DRUHHHGAK62PQ" +

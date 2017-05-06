@@ -20,6 +20,15 @@ import java.util.List;
 
 public class Item {
 
+    private String itemID;
+    private String title;
+    private String itemURL;
+    private String location;
+    private String price;
+    private String bestOfferEnabled;
+    private String buyItNow;
+
+
     private Item() {
 
     }
@@ -40,7 +49,31 @@ public class Item {
                 maxDesired = count;
             }
             for (int i = 0; i < maxDesired; i++) {
+                Item nextItem = new Item();
+                JSONObject next = items.getJSONObject(i);
 
+                JSONArray attribute = next.getJSONArray("itemID");
+                nextItem.itemID = attribute.getString(0);
+
+                attribute = next.getJSONArray("title");
+                nextItem.title = attribute.getString(0);
+
+                attribute = next.getJSONArray("viewItemURL");
+                nextItem.itemURL = attribute.getString(0);
+
+                attribute = next.getJSONArray("location");
+                nextItem.location = attribute.getString(0);
+
+                attribute = next.getJSONArray("sellingStatus").getJSONObject(0).getJSONArray("convertedCurrentPrice");
+                nextItem.price = attribute.getJSONObject(0).getString("__value__");
+
+                attribute = next.getJSONArray("listingInfo").getJSONObject(0).getJSONArray("bestOfferEnabled");
+                nextItem.bestOfferEnabled = attribute.getString(0);
+
+                attribute = next.getJSONArray("listingInfo").getJSONObject(0).getJSONArray("buyItNowAvailable");
+                nextItem.buyItNow = attribute.getString(0);
+
+                result.add(nextItem);
             }
 
         } catch (JSONException e) {
@@ -51,4 +84,18 @@ public class Item {
 
         return result;
     }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        return null;
+    }
+
+    public String getItemID() {return itemID;}
+    public String getTitle() {return title;}
+    public String getItemURL() {return itemURL;}
+    public String getLocation() {return location;}
+    public String getPrice() {return price;}
+    public String getBestOfferEnabled() {return bestOfferEnabled;}
+    public String getBuyItNow() {return buyItNow;}
 }
