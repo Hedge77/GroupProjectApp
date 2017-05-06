@@ -7,10 +7,12 @@
  */
 package group7.tcss450.uw.edu.groupprojectapp;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +29,7 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -114,8 +117,8 @@ public class Main2Activity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        if (id == R.id.nav_history) {
+            loadFragment(new HistoryFragment());
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -129,10 +132,34 @@ public class Main2Activity extends AppCompatActivity
         return true;
     }
 
+    private void loadFragment(android.support.v4.app.Fragment frag) {
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_container, frag)
+                .addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
+    }
+
+    private void saveToFile(String word) {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
+                    openFileOutput(getString(R.string.searched_words), Context.MODE_APPEND));
+            outputStreamWriter.append("Searched Item: ");
+            outputStreamWriter.append(word);
+            outputStreamWriter.append("\n");
+            outputStreamWriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onFragmentInteraction(String s) {
         //Async tasks call each other to ensure they are all finished before moving to next fragment
         //possibly save search terms here too?
+        //Log.d("WORDS", s);
+        saveToFile(s);
         AsyncTask<String, Void, String> task = new EbayWebServiceTask();
         task.execute(s);
     }

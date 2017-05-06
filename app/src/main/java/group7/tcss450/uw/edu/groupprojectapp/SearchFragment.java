@@ -11,9 +11,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 
@@ -26,6 +28,7 @@ import android.widget.EditText;
 public class SearchFragment extends Fragment implements View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
+    private EditText searchBox;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -36,7 +39,21 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        View v = inflater.inflate(R.layout.fragment_search, container, false);
+        Button b = (Button) v.findViewById(R.id.searchButton);
+        b.setOnClickListener(this);
+        return v;
+    }
+
+    /**
+     * Method to declare private EditText variables when the view is created.
+     *
+     * @param view The view of the SignUpFragment
+     * @param savedInstanceState The bundle of the view
+     */
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        searchBox = (EditText) view.findViewById(R.id.searchBox);
     }
 
 
@@ -57,18 +74,16 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         mListener = null;
     }
 
-//    public void buttonClicked(View v) {
-//        if (v.getId() == R.id.searchButton) {
-//            EditText searchBox = (EditText) getView().findViewById(R.id.searchBox);
-//            mListener.onFragmentInteraction(searchBox.getText().toString());
-//        }
-//    }
-
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.searchButton) {
-            EditText searchBox = (EditText) getView().findViewById(R.id.searchBox);
-            mListener.onFragmentInteraction(searchBox.getText().toString());
+        String word =  searchBox.getText().toString();
+        Log.d("WORK??", word);
+        if (mListener != null) {
+            switch (v.getId()) {
+                case R.id.searchButton:
+                    mListener.onFragmentInteraction(word);
+                    break;
+            }
         }
     }
 

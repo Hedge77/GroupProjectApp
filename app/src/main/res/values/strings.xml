@@ -18,4 +18,6 @@
     <string name="search_text">Search for an item here:</string>
     <string name="search_hint">Enter search terms</string>
     <string name="search_button_text">Search</string>
+
+    <string name="searched_words">Searched words</string>
 </resources>
