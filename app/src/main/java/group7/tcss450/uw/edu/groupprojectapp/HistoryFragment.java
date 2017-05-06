@@ -1,16 +1,19 @@
+/**
+ * TCSS 450 Mobile Programming
+ * Project PhaseI Group 7
+ *
+ * @author Jisu Shin, Ryan Roe
+ * @version 1.0
+ */
 package group7.tcss450.uw.edu.groupprojectapp;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;

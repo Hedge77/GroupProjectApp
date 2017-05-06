@@ -7,7 +7,9 @@
  */
 package group7.tcss450.uw.edu.groupprojectapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -46,6 +48,7 @@ public class Main2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SearchFragment.OnFragmentInteractionListener{
 
     private List<Item> mSearchResults;
+    private Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +61,10 @@ public class Main2Activity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Go Back to Home", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                mMenu.getItem(0).setVisible(false);
+                loadFragment(new SearchFragment());
             }
         });
 
@@ -92,8 +97,9 @@ public class Main2Activity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        mMenu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main2, menu);
+        getMenuInflater().inflate(R.menu.main2, mMenu);
         return true;
     }
 
@@ -103,7 +109,29 @@ public class Main2Activity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        if(id == R.id.ic_menu_delete){
+        new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Deleting Saved History")
+                .setMessage("Are you sure you want to delete the contents?")
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
+                                    openFileOutput(getString(R.string.searched_words), 0));
+                            outputStreamWriter.write("");
+                            outputStreamWriter.close();
+                            mMenu.getItem(2).setVisible(false);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        mMenu.getItem(0).setVisible(false);
+                        loadFragment(new SearchFragment());
+                    }
+                })
+                .show();
+    }
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -119,10 +147,10 @@ public class Main2Activity extends AppCompatActivity
 
         if (id == R.id.nav_history) {
             loadFragment(new HistoryFragment());
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
+            mMenu.getItem(0).setVisible(true);
+        } else if (id == R.id.nav_home) {
+            mMenu.getItem(0).setVisible(false);
+            loadFragment(new SearchFragment());
         } else if (id == R.id.nav_manage) {
 
         }
@@ -155,13 +183,13 @@ public class Main2Activity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(String s) {
+    public void onFragmentInteraction(String word) {
         //Async tasks call each other to ensure they are all finished before moving to next fragment
         //possibly save search terms here too?
         //Log.d("WORDS", s);
-        saveToFile(s);
+        saveToFile(word);
         AsyncTask<String, Void, String> task = new EbayWebServiceTask();
-        task.execute(s);
+        task.execute(word);
     }
 
     private class EbayWebServiceTask extends AsyncTask<String, Void, String> {

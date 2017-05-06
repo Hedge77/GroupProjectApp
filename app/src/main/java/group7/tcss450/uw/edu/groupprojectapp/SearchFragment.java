@@ -82,6 +82,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             switch (v.getId()) {
                 case R.id.searchButton:
                     mListener.onFragmentInteraction(word);
+                    searchBox.getText().clear();
                     break;
             }
         }
