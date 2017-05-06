@@ -44,22 +44,42 @@ import javax.crypto.spec.SecretKeySpec;
 
 import model.Item;
 
+/**
+ * Main2Activity
+ *
+ * This activity class is used to display saved history and results from web services.
+ *
+ * @author Jisu Shin, Ryan Roe
+ * @version 1.0
+ */
 public class Main2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SearchFragment.OnFragmentInteractionListener{
 
+    /** The list of items that results from search  */
     private List<Item> mSearchResults;
+
+    /** Private Menu object for this class  */
     private Menu mMenu;
 
+    /** The searched terms from Search Fragment  */
     private String mSearchTerms;
 
+    /**
+     * Method that creates main2activity with drawer layout
+     *
+     * @param savedInstanceState The state of saved instance
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        // Set Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        // if clicks, back to home
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,6 +99,7 @@ public class Main2Activity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Starts with Search Fragment
         if(savedInstanceState == null) {
            if (findViewById(R.id.main_container) != null) {
                 getSupportFragmentManager().beginTransaction()
@@ -87,6 +108,10 @@ public class Main2Activity extends AppCompatActivity
         }
     }
 
+    /**
+     * Method generated when Back is pressed with drawer layout.
+     *
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -97,6 +122,12 @@ public class Main2Activity extends AppCompatActivity
         }
     }
 
+    /**
+     * Method that creates OptionsMenu for this activity
+     *
+     * @param menu The menu object for the activity
+     * @return boolean value whether the menu is created or not.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         mMenu = menu;
@@ -105,13 +136,21 @@ public class Main2Activity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Method for selected OptionItem.
+     *
+     * @param item The MenuItem that selected.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        // if delete icon is selected,
         if(id == R.id.ic_menu_delete){
+        // prompt a user whether they really want to delete the saved history
         new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Deleting Saved History")
                 .setMessage("Are you sure you want to delete the contents?")
@@ -120,6 +159,7 @@ public class Main2Activity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         try {
+                            // overwrite the file (clear the file)
                             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
                                     openFileOutput(getString(R.string.searched_words), 0));
                             outputStreamWriter.write("");
@@ -128,7 +168,9 @@ public class Main2Activity extends AppCompatActivity
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        // menuitem disappears
                         mMenu.getItem(0).setVisible(false);
+                        // back to home
                         loadFragment(new SearchFragment());
                     }
                 })
@@ -141,20 +183,27 @@ public class Main2Activity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Method for the selected NavigationItem.
+     *
+     * @param item The MenuItem that selected.
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
         if (id == R.id.nav_history) {
             loadFragment(new HistoryFragment());
             mMenu.getItem(0).setVisible(true);
+
         } else if (id == R.id.nav_home) {
             mMenu.getItem(0).setVisible(false);
             loadFragment(new SearchFragment());
-        } else if (id == R.id.nav_manage) {
 
+        } else if (id == R.id.nav_manage) {
+            // later
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -162,6 +211,11 @@ public class Main2Activity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Method to load Fragment to main2 content.
+     *
+     * @param frag The fragment to add to the content.
+     */
     private void loadFragment(android.support.v4.app.Fragment frag) {
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
@@ -171,6 +225,11 @@ public class Main2Activity extends AppCompatActivity
         transaction.commit();
     }
 
+    /**
+     * Method to save the searched history.
+     *
+     * @param word The searched word.
+     */
     private void saveToFile(String word) {
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
@@ -184,17 +243,32 @@ public class Main2Activity extends AppCompatActivity
         }
     }
 
+    /**
+     * onFragmentInteraction method that enables the interaction
+     * between SearchFragment, HistoryFragment and DisplayResultsFragment.
+     *
+     * @param word The searched word.
+     */
     @Override
     public void onFragmentInteraction(String word) {
         //Async tasks call each other to ensure they are all finished before moving to next fragment
         //possibly save search terms here too?
-        //Log.d("WORDS", s);
         saveToFile(word);
         AsyncTask<String, Void, String> task = new EbayWebServiceTask();
         task.execute(word);
     }
 
+    /**
+     * EbayWebServiceTask
+     *
+     * This private class is used to use Ebay web service using AsyncTask.
+     *
+     * @author Ryan Roe
+     * @version 1.0
+     */
     private class EbayWebServiceTask extends AsyncTask<String, Void, String> {
+
+        /** The URL string for connecting to the web service */
         private final String ebayUrl = "http://svcs.ebay.com/services/search/FindingService" +
                 "/v1?OPERATION-NAME=findItemsByKeywords&SERVICE-NAME=FindingService" +
                 "&SECURITY-APPNAME=RyanRoe-TestAppl-PRD-a09141381-6ccb26aa" +
@@ -202,6 +276,12 @@ public class Main2Activity extends AppCompatActivity
                 "&REST-PAYLOAD" +
                 "&keywords=";
 
+        /**
+         * doInBackground method to connect to Ebay webservice.
+         *
+         * @param strings The string to connect to webservice
+         * @return The response string from the webservice
+         */
         @Override
         protected String doInBackground(String... strings) {
             if (strings.length != 1) {
@@ -230,6 +310,11 @@ public class Main2Activity extends AppCompatActivity
             return response;
         }
 
+        /**
+         * onPostExecute method that brings the result from the Ebay webservice
+         *
+         * @param result The result getting from the webservice
+         */
         @Override
         protected void onPostExecute(String result) {
             //something wrong with network or url
@@ -248,21 +333,31 @@ public class Main2Activity extends AppCompatActivity
         }
     }
 
-    /*
-    Working, but not yet integrated into the app.  See note in method below.  In the future this will
-    be called from EbayWebServiceTask's onPostExecute().
-    -Ryan
+    /**
+     * EbayWebServiceTask
+     *
+     * This private class is used to use Amazon web service using AsyncTask.
+     * Working, but not yet integrated into the app.  See note in method below.
+     * In the future, this will be called from EbayWebServiceTask's onPostExecute().
+     *
+     * @author Ryan Roe
+     * @version 1.0
      */
 
     private class AmazonWebServiceTask extends AsyncTask<String, Void, String> {
 
+        /**
+         * doInBackground method to connect to Amazon webservice.
+         *
+         * @param strings The string to connect to webservice
+         * @return The response string from the webservice
+         */
         @Override
         protected String doInBackground(String... strings) {
             if (strings.length != 2) {
                 throw new IllegalArgumentException("One string argument required");
             }
             String amazonURL = createSignedURL(strings[1]);
-//            Log.d("RESULT", amazonURL);
             String response = "";
             HttpURLConnection urlConnection = null;
             try {
@@ -285,9 +380,13 @@ public class Main2Activity extends AppCompatActivity
             return response;
         }
 
+        /**
+         * onPostExecute method that brings the result from the Ebay webservice
+         *
+         * @param result The result getting from the webservice
+         */
         @Override
         protected void onPostExecute(String result) {
-            //something wrong with network or url
             if (result.startsWith("Unable to")) {
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                 return;
@@ -296,20 +395,30 @@ public class Main2Activity extends AppCompatActivity
         }
     }
 
+    /**
+     * createSignedURL method to get URL string for connecting to webservice.
+     *
+     * Unlike Ebay, amazon requires a complex signed URL using a timestamp and a MAC,
+     * and their documentation for what exactly is required is convoluted.
+     * After a lot of work I got this system working, but it returns XML only so more work
+     * is required before this can be implemented into the app.
+     *
+     * @param query The partial string to connect to webservice
+     * @return The whole URL to connect to webservice
+     */
     private String createSignedURL(String query) {
-        /*
-        Unlike Ebay, amazon requires a complex signed URL using a timestamp and a MAC,
-        and their documentation for what exactly is required is convoluted.
-        After a lot of work I got this system working, but it returns XML only so more work
-        is required before this can be implemented into the app.
-        -Ryan
-         */
 
+        /** The API key for connecting to the web service */
         final String key = "PqED+3g6+9q2brubA0tH6xfHi3jkT+NMt/EXxGAr";
+
+        /** The Partial URL string for connecting to the web service */
         String partialURL = "http://webservices.amazon.com/onca/xml?";
+
+        /** The arguments for connecting to the web service */
         String args = "AWSAccessKeyId=AKIAJ73DRUHHHGAK62PQ" +
                 "&AssociateTag=ry04-20" +
                 "&Keywords=";
+
         args += replaceSpaces(query);
         args += "&Operation=ItemSearch" +
                 "&ResponseGroup=Small" +
@@ -317,7 +426,9 @@ public class Main2Activity extends AppCompatActivity
                 "&Service=AWSECommerceService" +
                 "&Timestamp=";
 
+        /** The simpledateformat to format the date */
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'-07:00'");
+        /** The string object of datetime */
         String dateTime = dateFormat.format(new Date());
         //args += dateTime;
         //ex datetime
@@ -329,8 +440,10 @@ public class Main2Activity extends AppCompatActivity
             e.printStackTrace();
         }
 
+        /** The string to sign to the URL */
         String stringToSign = "GET\nwebservices.amazon.com\n/onca/xml\n" + args;
 
+        /** The result for the URL */
         String result = "";
         try {
             Mac mac = Mac.getInstance("HmacSHA256");
@@ -350,6 +463,12 @@ public class Main2Activity extends AppCompatActivity
         return partialURL + args + "&Signature=" + result;
     }
 
+    /**
+     * replaceSpaces method to replace spaces for the URL for connecting to webservice.
+     *
+     * @param input The string to replace spaces
+     * @return The string that replaced spaces
+     */
     private String replaceSpaces(String input) {
         return input.replace(" ", "%20");
     }

@@ -20,35 +20,53 @@ import android.widget.EditText;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SearchFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
+ * SearchFragment
+ *
+ * This fragment class is used to display search screen
+ * and send a searched word to MainActivity class.
+ *
+ * @author Ryan Roe
+ * @version 1.0
  */
 public class SearchFragment extends Fragment implements View.OnClickListener {
 
+    /** Private OnFragmentInteractionListener for this class  */
     private OnFragmentInteractionListener mListener;
+
+    /** The private object of EditText for searching word  */
     private EditText searchBox;
 
+    /**
+     * Empty Constructor for SearchFragment
+     *
+     */
     public SearchFragment() {
         // Required empty public constructor
     }
 
-
+    /**
+     * Method that creates a view for SearchFragment and return the view
+     *
+     * @param inflater The LayoutInflater for creating view
+     * @param container The ViewGroup for creating view
+     * @param savedInstanceState The state of saved instance
+     * @return The view of the SearchFragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_search, container, false);
+        // Set OnclickListner to button
         Button b = (Button) v.findViewById(R.id.searchButton);
         b.setOnClickListener(this);
         return v;
     }
 
     /**
-     * Method to declare private EditText variables when the view is created.
+     * Method to declare private EditText variable when the view is created.
      *
-     * @param view The view of the SignUpFragment
+     * @param view The view of the SearchFragment
      * @param savedInstanceState The bundle of the view
      */
     @Override
@@ -56,7 +74,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         searchBox = (EditText) view.findViewById(R.id.searchBox);
     }
 
-
+    /**
+     * Method to attach the context before OnFragmentInteraction.
+     *
+     * @param context The context of the SearchFragment
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -68,16 +90,25 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * Method to detach the context and set OnFragmentInteractionListener to null.
+     */
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
+    /**
+     * Method to set onClick to "Search" button.
+     *
+     * @param v The view of the SignUpFragment
+     */
     @Override
     public void onClick(View v) {
+        // get text from EditText object
         String word =  searchBox.getText().toString();
-        Log.d("WORK??", word);
+
         if (mListener != null) {
             switch (v.getId()) {
                 case R.id.searchButton:
@@ -89,16 +120,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
+     * Interface to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     *
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(String s);
+        void onFragmentInteraction(String word);
     }
 }
