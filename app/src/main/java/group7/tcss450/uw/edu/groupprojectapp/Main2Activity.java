@@ -132,6 +132,7 @@ public class Main2Activity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(String s) {
         //Async tasks call each other to ensure they are all finished before moving to next fragment
+        //possibly save search terms here too?
         AsyncTask<String, Void, String> task = new EbayWebServiceTask();
         task.execute(s);
     }
