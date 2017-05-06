@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 
@@ -23,9 +24,11 @@ import android.widget.EditText;
  * {@link SearchFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements View.OnClickListener{
 
     private OnFragmentInteractionListener mListener;
+    private EditText word;
+    private String searchedWord;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -36,7 +39,11 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        View v = inflater.inflate(R.layout.fragment_signupfragment, container, false);
+        Button b = (Button) v.findViewById(R.id.searchButton);
+        b.setOnClickListener(this);
+        word=(EditText) v.findViewById(R.id.searchBox);
+        return v;
     }
 
 
@@ -62,6 +69,11 @@ public class SearchFragment extends Fragment {
             EditText searchBox = (EditText) getView().findViewById(R.id.searchBox);
             mListener.onFragmentInteraction(searchBox.getText().toString());
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 
     /**
