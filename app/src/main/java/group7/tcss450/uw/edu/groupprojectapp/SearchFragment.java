@@ -23,7 +23,7 @@ import android.widget.EditText;
  * {@link SearchFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
 
@@ -57,7 +57,15 @@ public class SearchFragment extends Fragment {
         mListener = null;
     }
 
-    public void buttonClicked(View v) {
+//    public void buttonClicked(View v) {
+//        if (v.getId() == R.id.searchButton) {
+//            EditText searchBox = (EditText) getView().findViewById(R.id.searchBox);
+//            mListener.onFragmentInteraction(searchBox.getText().toString());
+//        }
+//    }
+
+    @Override
+    public void onClick(View v) {
         if (v.getId() == R.id.searchButton) {
             EditText searchBox = (EditText) getView().findViewById(R.id.searchBox);
             mListener.onFragmentInteraction(searchBox.getText().toString());
