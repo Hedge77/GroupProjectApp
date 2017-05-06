@@ -1,10 +1,3 @@
-/**
- * TCSS 450 Mobile Programming
- * Project PhaseI Group 7
- *
- * @author Jisu Shin, Ryan Roe
- * @version 1.0
- */
 package group7.tcss450.uw.edu.groupprojectapp;
 
 import android.content.Context;
@@ -14,20 +7,19 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SearchFragment.OnFragmentInteractionListener} interface
+ * {@link HistoryFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class SearchFragment extends Fragment {
+public class HistoryFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public SearchFragment() {
+    public HistoryFragment() {
         // Required empty public constructor
     }
 
@@ -36,9 +28,15 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        return inflater.inflate(R.layout.fragment_history, container, false);
     }
 
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -57,13 +55,6 @@ public class SearchFragment extends Fragment {
         mListener = null;
     }
 
-    public void buttonClicked(View v) {
-        if (v.getId() == R.id.searchButton) {
-            EditText searchBox = (EditText) getView().findViewById(R.id.searchBox);
-            mListener.onFragmentInteraction(searchBox.getText().toString());
-        }
-    }
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -75,6 +66,7 @@ public class SearchFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(String s);
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
     }
 }

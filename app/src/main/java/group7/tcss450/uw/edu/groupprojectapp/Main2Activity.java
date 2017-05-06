@@ -1,3 +1,10 @@
+/**
+ * TCSS 450 Mobile Programming
+ * Project PhaseI Group 7
+ *
+ * @author Jisu Shin, Ryan Roe
+ * @version 1.0
+ */
 package group7.tcss450.uw.edu.groupprojectapp;
 
 import android.os.AsyncTask;
@@ -61,6 +68,13 @@ public class Main2Activity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if(savedInstanceState == null) {
+           if (findViewById(R.id.main_container) != null) {
+                getSupportFragmentManager().beginTransaction()
+                  .add(R.id.main_container, new SearchFragment()).commit();
+            }
+        }
     }
 
     @Override
