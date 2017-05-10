@@ -36,6 +36,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class Main2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SearchFragment.OnFragmentInteractionListener{
 
     /** The list of items that results from search  */
-    private List<Item> mSearchResults;
+//    private List<Item> mSearchResults;
 
     /** Private Menu object for this class  */
     private Menu mMenu;
@@ -259,14 +260,13 @@ public class Main2Activity extends AppCompatActivity
     }
 
     private void sendResults(List<Item> items) {
-        StringBuilder sb = new StringBuilder();
+        ArrayList<String> itemStrings = new ArrayList<>();
         for(Item i : items) {
-            sb.append(i.toString());
-            sb.append("\n\n\n");
+            itemStrings.add(i.toString());
         }
-        String result = sb.toString();
+
         Bundle args = new Bundle();
-        args.putString(getString(R.string.items_key), result);
+        args.putStringArrayList(getString(R.string.items_key), itemStrings);
 
         DisplayResultsFragment frag;
         frag =  new DisplayResultsFragment();
@@ -358,8 +358,12 @@ public class Main2Activity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                 return;
             }
-//            List<Item> ebayItems = Item.ebayJsonToItems(result);
+            List<Item> ebayItems = Item.ebayJsonToItems(result);
+//            if (mSearchResults == null) {
+//                mSearchResults = new ArrayList<Item>();
+//            }
 //
+//            //transfer items to field
 //            for(int i = 0; i < ebayItems.size(); i++) {
 //                if (mSearchResults != null) {
 //                    mSearchResults.clear();
@@ -367,7 +371,7 @@ public class Main2Activity extends AppCompatActivity
 //                mSearchResults.add(ebayItems.get(i));
 //            }
 
-            sendResults(result);
+            sendResults(ebayItems);
 
 
 

@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import model.Item;
@@ -67,14 +68,21 @@ public class DisplayResultsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        String items = null;
+        ArrayList<String> items = null;
         if(getArguments() != null) {
             Bundle args = getArguments();
-            items = args.getString(getString(R.string.items_key));
+            items = args.getStringArrayList(getString(R.string.items_key));
         }
 
-        TextView v = (TextView) getView().findViewById(R.id.displayResults);
-        v.setText(items);
+        if (items != null) {
+            StringBuilder sb = new StringBuilder();
+            for (String i : items) {
+                sb.append(i);
+                sb.append("\n\n\n");
+            }
+            TextView v = (TextView) getView().findViewById(R.id.displayResults);
+            v.setText(sb.toString());
+        }
     }
 
     /**

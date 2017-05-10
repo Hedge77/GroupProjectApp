@@ -7,6 +7,8 @@
  */
 package model;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +33,7 @@ public class Item {
 
 
     private Item() {
-
+        super();
     }
 
     public static List<Item> ebayJsonToItems(String jsonString) {
@@ -53,9 +55,10 @@ public class Item {
             for (int i = 0; i < maxDesired; i++) {
                 nextItem = new Item();
                 JSONObject next = items.getJSONObject(i);
-
+//                Log.d("ITEM", (nextItem == null ? "Is null" : "not null"));
                 JSONArray attribute = next.getJSONArray("itemId");
                 nextItem.itemID = attribute.getString(0);
+//                Log.d("ITEM", nextItem.toString());
 
                 attribute = next.getJSONArray("title");
                 nextItem.title = attribute.getString(0);
@@ -74,23 +77,24 @@ public class Item {
 
                 attribute = next.getJSONArray("listingInfo").getJSONObject(0).getJSONArray("buyItNowAvailable");
                 nextItem.buyItNow = attribute.getString(0);
+//                Log.d("ITEM", nextItem.toString());
 
                 result.add(nextItem);
             }
+//            Log.d("LIST", (result == null ? "Is null" : "not null"));
 
         } catch (JSONException e) {
             e.printStackTrace();
 
-        } finally {
-
         }
-
+//        Log.d("LIST", (result == null ? "Is null" : "not null"));
 
         return result;
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
+
 
         sb.append(title);
         sb.append('\n');
@@ -104,7 +108,7 @@ public class Item {
         sb.append("BuyItNow: ");
         sb.append(buyItNow);
 
-        return null;
+        return sb.toString();
     }
 
     public String getItemID() {return itemID;}
