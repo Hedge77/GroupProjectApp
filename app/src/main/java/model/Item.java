@@ -2,7 +2,7 @@
  * TCSS 450 Mobile Programming
  * Project PhaseI Group 7
  *
- * @author Jisu Shin, Ryan Roe
+ * @author Jisu Shin, Ryan Roe, Brandon Lo
  * @version 1.0
  */
 package model;
@@ -15,10 +15,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Created by Ryan on 5/5/2017.
- */
 
 public class Item {
 
@@ -94,7 +90,6 @@ public class Item {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-
 
         sb.append(title);
         sb.append('\n');

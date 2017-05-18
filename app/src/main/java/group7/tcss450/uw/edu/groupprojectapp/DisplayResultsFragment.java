@@ -2,11 +2,12 @@
  * TCSS 450 Mobile Programming
  * Project PhaseI Group 7
  *
- * @author Jisu Shin, Ryan Roe
+ * @author Jisu Shin, Ryan Roe, Brandon Lo
  * @version 1.0
  */
 package group7.tcss450.uw.edu.groupprojectapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -55,25 +56,17 @@ public class DisplayResultsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View inflated = inflater.inflate(R.layout.fragment_display_results, container, false);
-
-
-
-
-
-
         return inflated;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
         ArrayList<String> items = null;
         if(getArguments() != null) {
             Bundle args = getArguments();
             items = args.getStringArrayList(getString(R.string.items_key));
         }
-
         if (items != null) {
             StringBuilder sb = new StringBuilder();
             for (String i : items) {

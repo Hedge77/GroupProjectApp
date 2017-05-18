@@ -2,7 +2,7 @@
  * TCSS 450 Mobile Programming
  * Project PhaseI Group 7
  *
- * @author Jisu Shin, Ryan Roe
+ * @author Jisu Shin, Ryan Roe, Brandon Lo
  * @version 1.0
  */
 package group7.tcss450.uw.edu.groupprojectapp;

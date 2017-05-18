@@ -2,7 +2,7 @@
  * TCSS 450 Mobile Programming
  * Project PhaseI Group 7
  *
- * @author Jisu Shin, Ryan Roe
+ * @author Jisu Shin, Ryan Roe, Brandon Lo
  * @version 1.0
  */
 package group7.tcss450.uw.edu.groupprojectapp;
@@ -112,9 +112,17 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
             name.setError("Field cannot be left blank.");
             return;
         }
+        if(name.getText().toString().length() < 2 || name.getText().toString().length() > 8){
+            name.setError("Should be 2-8 characters.");
+            return;
+        }
         // check if EditText for password is empty
         if(pwd1.getText().toString().equals("")){
             pwd1.setError("Field cannot be left blank.");
+            return;
+        }
+        if(pwd1.getText().toString().length() < 5){
+            pwd1.setError("Should be longer than 5 characters.");
             return;
         }
         // check if EditText for confirming password is empty

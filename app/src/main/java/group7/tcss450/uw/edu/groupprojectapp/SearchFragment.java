@@ -2,11 +2,12 @@
  * TCSS 450 Mobile Programming
  * Project PhaseI Group 7
  *
- * @author Jisu Shin, Ryan Roe
+ * @author Jisu Shin, Ryan Roe, Brandon Lo
  * @version 1.0
  */
 package group7.tcss450.uw.edu.groupprojectapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -112,8 +113,15 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         if (mListener != null) {
             switch (v.getId()) {
                 case R.id.searchButton:
+                    //ProgressDialog mProg = new ProgressDialog(this.getContext());
+                    ProgressDialog mProg = ProgressDialog.show(this.getContext(), "Loading", "Wait while loading...");
+//                    mProg.setTitle("Loading");
+//                    mProg.setMessage("Wait while loading...");
+                    // mProg.setCancelable(false); // disable dismiss by tapping outside of the dialog
+                    //mProg.show(this.getContext(), "Loading", "Wait while loading...");
                     mListener.onFragmentInteraction(word);
                     searchBox.getText().clear();
+                    mProg.dismiss();
                     break;
             }
         }

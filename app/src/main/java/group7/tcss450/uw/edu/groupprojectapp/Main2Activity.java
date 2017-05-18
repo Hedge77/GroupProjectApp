@@ -2,7 +2,7 @@
  * TCSS 450 Mobile Programming
  * Project PhaseI Group 7
  *
- * @author Jisu Shin, Ryan Roe
+ * @author Jisu Shin, Ryan Roe, Brandon Lo
  * @version 1.0
  */
 package group7.tcss450.uw.edu.groupprojectapp;
@@ -12,11 +12,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -65,6 +67,9 @@ public class Main2Activity extends AppCompatActivity
     /** The searched terms from Search Fragment  */
     private String mSearchTerms;
 
+    /** Private Menu object for this class  */
+    private FloatingActionButton mFAB;
+
     /**
      * Method that creates main2activity with drawer layout
      *
@@ -79,9 +84,9 @@ public class Main2Activity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        mFAB = (FloatingActionButton) findViewById(R.id.fab);
         // if clicks, back to home
-        fab.setOnClickListener(new View.OnClickListener() {
+        mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Go Back to Home", Snackbar.LENGTH_LONG)
