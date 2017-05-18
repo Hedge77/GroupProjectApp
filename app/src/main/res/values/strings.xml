@@ -18,7 +18,7 @@
     <string name="search_text">Search for an item here:</string>
     <string name="search_hint">Enter search terms</string>
     <string name="search_button_text">Search</string>
-    <string name="results_text_view_text">Search results:</string>
+    <string name="results_text_view_text">Search Results:</string>
     <string name="default_result">Something went wrong, this is the default text.</string>
 
     <string name="items_key">itemKey</string>
