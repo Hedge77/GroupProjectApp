@@ -8,6 +8,7 @@
 package group7.tcss450.uw.edu.groupprojectapp;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity
 
     /** Private Menu object for this class  */
     private FloatingActionButton mFAB;
+
+    private ProgressDialog mProg;
 
     /**
      * Method that creates main2activity with drawer layout
@@ -258,10 +261,11 @@ public class MainActivity extends AppCompatActivity
      * @param word The searched word.
      */
     @Override
-    public void onFragmentInteraction(String word) {
+    public void onFragmentInteraction(String word, ProgressDialog dialog) {
         //Async tasks call each other to ensure they are all finished before moving to next fragment
         //possibly save search terms here too?
         mSearchTerms = word;
+        mProg = dialog;
         saveToFile(word);
         AsyncTask<String, Void, String> task = new EbayWebServiceTask();
         task.execute(word);
@@ -273,6 +277,8 @@ public class MainActivity extends AppCompatActivity
         for(Item i : items) {
             itemStrings.add(i.toString());
         }
+
+        mProg.dismiss();
 
         Bundle args = new Bundle();
         args.putStringArrayList(getString(R.string.items_key), itemStrings);

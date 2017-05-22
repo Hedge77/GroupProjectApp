@@ -113,15 +113,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         if (mListener != null) {
             switch (v.getId()) {
                 case R.id.searchButton:
-                    //ProgressDialog mProg = new ProgressDialog(this.getContext());
                     ProgressDialog mProg = ProgressDialog.show(this.getContext(), "Loading", "Wait while loading...");
-//                    mProg.setTitle("Loading");
-//                    mProg.setMessage("Wait while loading...");
-                    // mProg.setCancelable(false); // disable dismiss by tapping outside of the dialog
-                    //mProg.show(this.getContext(), "Loading", "Wait while loading...");
-                    mListener.onFragmentInteraction(word);
+                    mListener.onFragmentInteraction(word, mProg);
                     searchBox.getText().clear();
-                    mProg.dismiss();
                     break;
             }
         }
@@ -134,6 +128,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
      *
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(String word);
+        void onFragmentInteraction(String word, ProgressDialog dialog);
     }
 }
