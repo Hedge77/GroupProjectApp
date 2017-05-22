@@ -20,7 +20,7 @@ import android.widget.EditText;
  * SignUpFragment
  *
  * This fragment class is used to display sign-up screen
- * and send username and password to MainActivity class.
+ * and send username and password to LoginActivity class.
  *
  * @author Jisu Shin
  * @version 1.0

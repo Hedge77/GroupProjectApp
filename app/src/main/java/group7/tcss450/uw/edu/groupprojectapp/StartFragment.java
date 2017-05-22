@@ -19,7 +19,7 @@ import android.widget.Button;
  * StartFragment
  *
  * This fragment class is used to display start-up screen
- * and send button name to MainActivity class.
+ * and send button name to LoginActivity class.
  *
  * @author Jisu Shin
  * @version 1.0

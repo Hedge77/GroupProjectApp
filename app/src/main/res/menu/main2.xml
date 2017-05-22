@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="group7.tcss450.uw.edu.groupprojectapp.Main2Activity">
+    tools:context="group7.tcss450.uw.edu.groupprojectapp.MainActivity">
 
     <item
         android:id="@+id/ic_menu_delete"

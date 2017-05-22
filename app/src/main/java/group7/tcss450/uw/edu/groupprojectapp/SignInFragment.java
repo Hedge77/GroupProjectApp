@@ -20,7 +20,7 @@ import android.widget.EditText;
  * SignInFragment
  *
  * This fragment class is used to display log-in screen
- * and send username and password to MainActivity class.
+ * and send username and password to LoginActivity class.
  *
  * @author Jisu Shin
  * @version 1.0
@@ -82,7 +82,7 @@ public class SignInFragment extends Fragment {
     }
 
     /**
-     * Method that sends the purpose, username and password from this fragment to MainActivity
+     * Method that sends the purpose, username and password from this fragment to LoginActivity
      *
      * @param un The username from this fragment
      * @param pw The password from this fragment

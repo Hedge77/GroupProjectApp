@@ -24,7 +24,7 @@ import android.widget.EditText;
  * SearchFragment
  *
  * This fragment class is used to display search screen
- * and send a searched word to MainActivity class.
+ * and send a searched word to LoginActivity class.
  *
  * @author Ryan Roe
  * @version 1.0
