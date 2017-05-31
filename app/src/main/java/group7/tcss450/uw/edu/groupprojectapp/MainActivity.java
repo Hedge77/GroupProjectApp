@@ -15,9 +15,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -38,6 +38,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -46,9 +47,9 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 
-import group7.tcss450.uw.edu.groupprojectapp.XMLtoJSON.JSONObject;
-import group7.tcss450.uw.edu.groupprojectapp.XMLtoJSON.XML;
 import group7.tcss450.uw.edu.groupprojectapp.model.Item;
+
+import static android.R.id.list;
 
 /**
  * MainActivity
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity
 
     /** The list of items that results from search  */
     private List<Item> mSearchResults;
+
+    private List<String> mSearchItems;
 
     /** Private Menu object for this class  */
     private Menu mMenu;
@@ -83,7 +86,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_main);
 
         // Set Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -94,7 +97,7 @@ public class MainActivity extends AppCompatActivity
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Go Back to Home", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Go Back to Main", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 mMenu.getItem(0).setVisible(false);
                 loadFragment(new SearchFragment());
@@ -117,6 +120,7 @@ public class MainActivity extends AppCompatActivity
                   .add(R.id.main_container, new SearchFragment()).commit();
             }
         }
+        mSearchItems = new ArrayList<>();
     }
 
     /**
@@ -143,7 +147,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         mMenu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main2, mMenu);
+        getMenuInflater().inflate(R.menu.main, mMenu);
         return true;
     }
 
@@ -175,6 +179,7 @@ public class MainActivity extends AppCompatActivity
                                     openFileOutput(getString(R.string.searched_words), 0));
                             outputStreamWriter.write("");
                             outputStreamWriter.close();
+                            mSearchItems.clear();
                             mMenu.getItem(2).setVisible(false);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -186,9 +191,11 @@ public class MainActivity extends AppCompatActivity
                     }
                 })
                 .show();
-    }
+        }
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            DialogFragment frag = new FilterListDialogFragment();
+            frag.show(getSupportFragmentManager(), "launch");
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -223,7 +230,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Method to load Fragment to main2 content.
+     * Method to load Fragment to main content.
      *
      * @param frag The fragment to add to the content.
      */
@@ -245,10 +252,14 @@ public class MainActivity extends AppCompatActivity
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
                     openFileOutput(getString(R.string.searched_words), Context.MODE_APPEND));
-            outputStreamWriter.append("Searched Item: ");
-            outputStreamWriter.append(word);
-            outputStreamWriter.append("\n");
+            if(!(mSearchItems.contains(word)) || word == "") {
+                mSearchItems.add(word);
+                outputStreamWriter.append("Searched Item: ");
+                outputStreamWriter.append(word);
+                outputStreamWriter.append("\n");
+            }
             outputStreamWriter.close();
+            Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
         }

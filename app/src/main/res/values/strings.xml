@@ -14,7 +14,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_filter">Filter</string>
     <string name="search_text">Search for an item here:</string>
     <string name="search_hint">Enter a search term</string>
     <string name="search_button_text">Search</string>
@@ -24,4 +24,13 @@
     <string name="items_key">itemKey</string>
 
     <string name="searched_words">Searched words</string>
+
+    <string name="pick_toppings">Pick Online Retailer(s)</string>
+    <array name="toppings_array">
+        <item name="pepperoni">Amazon</item>
+        <item name="mushrooms">eBay</item>
+    </array>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
 </resources>
