@@ -22,6 +22,7 @@
     <string name="default_result">Something went wrong, this is the default text.</string>
 
     <string name="items_key">itemKey</string>
+    <string name="filter_key">filterKey</string>
 
     <string name="searched_words">Searched words</string>
 

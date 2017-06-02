@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity
     /** The list of items that results from search  */
     private List<Item> mSearchResults;
 
+    private List<String> mFilterList;
+
     private List<String> mSearchItems;
 
     /** Private Menu object for this class  */
@@ -194,11 +196,26 @@ public class MainActivity extends AppCompatActivity
         }
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            //display the filter dialog
             DialogFragment frag = new FilterListDialogFragment();
             frag.show(getSupportFragmentManager(), "launch");
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * This method receives input from the filter dialog and updates search results
+     * if they are already being displayed.
+     * @param selected
+     */
+    public void filterDialogClicked(List<String> selected) {
+        mFilterList = selected;
+        View v = findViewById(R.id.displayResults);
+        if (v != null) {
+            // on results page already, must update
+            sendResults();
+        }
     }
 
     /**
@@ -259,7 +276,7 @@ public class MainActivity extends AppCompatActivity
                 outputStreamWriter.append("\n");
             }
             outputStreamWriter.close();
-            Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -289,10 +306,25 @@ public class MainActivity extends AppCompatActivity
             itemStrings.add(i.toString());
         }
 
-        mProg.dismiss();
+        //has to be arraylist for bundle
+        ArrayList<String> filterStrings = new ArrayList<>();
+        if (mFilterList != null) {
+            for (String i : mFilterList) {
+                filterStrings.add(i);
+            }
+        } else {
+            filterStrings.add("Amazon");
+            filterStrings.add("eBay");
+        }
+
+        if (mProg != null) {
+            mProg.dismiss();
+        }
 
         Bundle args = new Bundle();
         args.putStringArrayList(getString(R.string.items_key), itemStrings);
+        args.putStringArrayList(getString(R.string.filter_key), filterStrings);
+
 
         DisplayResultsFragment frag;
         frag =  new DisplayResultsFragment();
