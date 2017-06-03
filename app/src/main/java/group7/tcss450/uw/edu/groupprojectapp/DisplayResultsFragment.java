@@ -102,38 +102,4 @@ public class DisplayResultsFragment extends Fragment{
         }
     }
 
-    /**
-     * Method to attach the context before OnFragmentInteraction.
-     *
-     * @param context The context of the DisplayResultsFragment
-     */
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-
-//    /**
-//     * Method to detach the context and set OnFragmentInteractionListener to null.
-//     */
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-//
-//    /**
-//     * Interface to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     *
-//     */
-//    public interface OnFragmentInteractionListener {
-//        void onFragmentInteraction(Uri uri);
-//    }
 }

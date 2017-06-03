@@ -16,10 +16,11 @@ import group7.tcss450.uw.edu.groupprojectapp.XMLtoJSON.JSONException;
 import group7.tcss450.uw.edu.groupprojectapp.XMLtoJSON.JSONObject;
 import group7.tcss450.uw.edu.groupprojectapp.XMLtoJSON.XML;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Item implements Comparable<Item> {
+public class Item implements Comparable<Item>, Serializable {
 
     /**
      * Number of items collected from the large JSON
@@ -205,4 +206,5 @@ public class Item implements Comparable<Item> {
     public String getPrice() {return price;}
     public String getBestOfferEnabled() {return bestOfferEnabled;}
     public String getBuyItNow() {return buyItNow;}
+    public Item getItem() {return this;}
 }

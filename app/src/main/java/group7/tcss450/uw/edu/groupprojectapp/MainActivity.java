@@ -18,6 +18,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -48,6 +49,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 
 import group7.tcss450.uw.edu.groupprojectapp.model.Item;
+import group7.tcss450.uw.edu.groupprojectapp.model.ItemList;
 
 import static android.R.id.list;
 
@@ -60,7 +62,8 @@ import static android.R.id.list;
  * @version 1.0
  */
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SearchFragment.OnFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener,
+                SearchFragment.OnFragmentInteractionListener {
 
     /** The list of items that results from search  */
     private List<Item> mSearchResults;
@@ -123,6 +126,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
         mSearchItems = new ArrayList<>();
+        //mMenu.getItem(2).setVisible(false);
     }
 
     /**
@@ -160,6 +164,7 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -269,17 +274,47 @@ public class MainActivity extends AppCompatActivity
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
                     openFileOutput(getString(R.string.searched_words), Context.MODE_APPEND));
-            if(!(mSearchItems.contains(word)) || word == "") {
+            if(word == "" || (!(mSearchItems.contains(word))
+                    && containWord(getString(R.string.searched_words), word))) {
                 mSearchItems.add(word);
+                for (int i =0; i<mSearchItems.size(); i++) {
+                    Log.d("ITEMS", mSearchItems.get(i));
+                }
                 outputStreamWriter.append("Searched Item: ");
                 outputStreamWriter.append(word);
                 outputStreamWriter.append("\n");
             }
             outputStreamWriter.close();
-//            Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean containWord(String file, String word) {
+        boolean contains = true;
+        Log.d("????", word);
+        try {
+            InputStream inputStream = openFileInput(file);
+            Log.d("????", "open");
+            if (inputStream != null) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+                while ((receiveString = bufferedReader.readLine()) != null) {
+                    Log.d("MATCHES", receiveString);
+                    if(receiveString.equals("Searched Item: " + word)) {
+                        Log.d("MATCHES", "matches");
+                        contains = false;
+                        break;
+                    }
+                }
+                inputStream.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return contains;
     }
 
     /**
@@ -301,6 +336,8 @@ public class MainActivity extends AppCompatActivity
 
     private void sendResults(List<Item> items) {
         Collections.sort(items);
+        ItemList list = new ItemList();
+        list.setList(items);
         ArrayList<String> itemStrings = new ArrayList<>();
         for(Item i : items) {
             itemStrings.add(i.toString());
@@ -322,12 +359,23 @@ public class MainActivity extends AppCompatActivity
         }
 
         Bundle args = new Bundle();
+        args.putSerializable("list", list);
         args.putStringArrayList(getString(R.string.items_key), itemStrings);
         args.putStringArrayList(getString(R.string.filter_key), filterStrings);
 
 
-        DisplayResultsFragment frag;
-        frag =  new DisplayResultsFragment();
+//        DisplayResultsFragment frag;
+//        frag =  new DisplayResultsFragment();
+//        frag.setArguments(args);
+//        FragmentTransaction transaction = getSupportFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.main_container, frag)
+//                .addToBackStack(null);
+//        // Commit the transaction
+//        transaction.commit();
+
+        ResultFragment frag;
+        frag =  new ResultFragment();
         frag.setArguments(args);
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
@@ -342,21 +390,6 @@ public class MainActivity extends AppCompatActivity
             sendResults(mSearchResults);
         }
     }
-
-//    private void sendResults(String s) {
-//        Bundle args = new Bundle();
-//        args.putString(getString(R.string.items_key), s);
-//
-//        DisplayResultsFragment frag;
-//        frag =  new DisplayResultsFragment();
-//        frag.setArguments(args);
-//        FragmentTransaction transaction = getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.main_container, frag)
-//                .addToBackStack(null);
-//        // Commit the transaction
-//        transaction.commit();
-//    }
 
     /**
      * EbayWebServiceTask
@@ -426,14 +459,6 @@ public class MainActivity extends AppCompatActivity
 
             mSearchResults = new ArrayList<>();
             mSearchResults.addAll(ebayItems);
-//
-//            //transfer items to field
-//            for(int i = 0; i < ebayItems.size(); i++) {
-//                if (mSearchResults != null) {
-//                    mSearchResults.clear();
-//                }
-//                mSearchResults.add(ebayItems.get(i));
-//            }
 
             AsyncTask<String, Void, String> task = new AmazonWebServiceTask();
             task.execute(mSearchTerms);
@@ -494,9 +519,6 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                 return;
             }
-
-//            JSONObject json = XML.toJSONObject(result, true);
-//            Log.d("JSON", json.toString());
             List<Item> amazonItems = Item.amazonXMLtoItems(result);
             mSearchResults.addAll(amazonItems);
             sendResults();
@@ -505,6 +527,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private String createSignedURL(String query) {
+
         /*
         Unlike Ebay, amazon requires a complex signed URL using a timestamp and a MAC,
         and their documentation for what exactly is required is convoluted.
@@ -548,8 +571,6 @@ public class MainActivity extends AppCompatActivity
             result = Base64.encodeToString(bytes, Base64.DEFAULT);
             result = URLEncoder.encode(result, "UTF-8");
             result = result.replace("%3D%0A", "%3D");
-//            result.replace("=", "%3D");
-//            Log.d("RESULT", result);
 
         } catch (Exception e) {
             e.printStackTrace();
