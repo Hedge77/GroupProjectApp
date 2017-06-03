@@ -7,7 +7,6 @@
     android:clickable="true"
     tools:context="group7.tcss450.uw.edu.groupprojectapp.ItemFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:id="@+id/dataview"
         android:layout_width="match_parent"

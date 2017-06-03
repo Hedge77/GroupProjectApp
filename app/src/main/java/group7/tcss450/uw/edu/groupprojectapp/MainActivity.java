@@ -273,12 +273,9 @@ public class MainActivity extends AppCompatActivity
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
                     openFileOutput(getString(R.string.searched_words), Context.MODE_APPEND));
-            if(word.equals("") || (!(mSearchItems.contains(word))
+            if(!(word.equals("")) && (!(mSearchItems.contains(word))
                     && containWord(getString(R.string.searched_words), word))) {
                 mSearchItems.add(word);
-                for (int i =0; i<mSearchItems.size(); i++) {
-                    Log.d("ITEMS", mSearchItems.get(i));
-                }
                 outputStreamWriter.append("Searched Item: ");
                 outputStreamWriter.append(word);
                 outputStreamWriter.append("\n");
@@ -349,6 +346,11 @@ public class MainActivity extends AppCompatActivity
             itemStrings.add(i.toString());
         }
 
+        ArrayList<Item> filteredItems = new ArrayList<>();
+        for(Item i : items) {
+            itemStrings.add(i.toString());
+        }
+
         //has to be arraylist for bundle
         ArrayList<String> filterStrings = new ArrayList<>();
         if (mFilterList != null) {
@@ -363,25 +365,17 @@ public class MainActivity extends AppCompatActivity
         if (mProg != null) {
             mProg.dismiss();
         }
+        mMenu.getItem(0).setVisible(false);
 
         Bundle args = new Bundle();
         args.putSerializable("list", list);
         args.putStringArrayList(getString(R.string.items_key), itemStrings);
         args.putStringArrayList(getString(R.string.filter_key), filterStrings);
 
-//        Displays the results in ScrollView (works perfectly!)
-//        DisplayResultsFragment frag;
-//        frag =  new DisplayResultsFragment();
-//        frag.setArguments(args);
-//        FragmentTransaction transaction = getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.main_container, frag)
-//                .addToBackStack(null);
-//        // Commit the transaction
-//        transaction.commit();
+        //Displays the results in ScrollView (works perfectly!)
 
-        ResultFragment frag;
-        frag =  new ResultFragment();
+        DisplayResultsFragment frag;
+        frag =  new DisplayResultsFragment();
         frag.setArguments(args);
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
@@ -389,6 +383,16 @@ public class MainActivity extends AppCompatActivity
                 .addToBackStack(null);
         // Commit the transaction
         transaction.commit();
+
+//        ResultFragment frag;
+//        frag =  new ResultFragment();
+//        frag.setArguments(args);
+//        FragmentTransaction transaction = getSupportFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.main_container, frag)
+//                .addToBackStack(null);
+//        // Commit the transaction
+//        transaction.commit();
     }
 
     private void sendResults() {
