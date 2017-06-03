@@ -212,7 +212,8 @@ public class MainActivity extends AppCompatActivity
     /**
      * This method receives input from the filter dialog and updates search results
      * if they are already being displayed.
-     * @param selected
+     *
+     * @param selected selected items
      */
     public void filterDialogClicked(List<String> selected) {
         mFilterList = selected;
@@ -242,8 +243,6 @@ public class MainActivity extends AppCompatActivity
             mMenu.getItem(0).setVisible(false);
             loadFragment(new SearchFragment());
 
-        } else if (id == R.id.nav_manage) {
-            // later
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -274,7 +273,7 @@ public class MainActivity extends AppCompatActivity
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
                     openFileOutput(getString(R.string.searched_words), Context.MODE_APPEND));
-            if(word == "" || (!(mSearchItems.contains(word))
+            if(word.equals("") || (!(mSearchItems.contains(word))
                     && containWord(getString(R.string.searched_words), word))) {
                 mSearchItems.add(word);
                 for (int i =0; i<mSearchItems.size(); i++) {
@@ -290,6 +289,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Method to check if the current savedhistory contains the word
+     *
+     * @param file The file to open
+     * @param word The word to be checked if it's already searched
+     * @return false if the word has not searched yet.
+     */
     private boolean containWord(String file, String word) {
         boolean contains = true;
         Log.d("????", word);
@@ -363,7 +369,7 @@ public class MainActivity extends AppCompatActivity
         args.putStringArrayList(getString(R.string.items_key), itemStrings);
         args.putStringArrayList(getString(R.string.filter_key), filterStrings);
 
-
+//        Displays the results in ScrollView (works perfectly!)
 //        DisplayResultsFragment frag;
 //        frag =  new DisplayResultsFragment();
 //        frag.setArguments(args);

@@ -11,6 +11,8 @@ package group7.tcss450.uw.edu.groupprojectapp.model;
 //import org.json.JSONException;
 //import org.json.JSONObject;
 
+import android.support.annotation.NonNull;
+
 import group7.tcss450.uw.edu.groupprojectapp.XMLtoJSON.JSONArray;
 import group7.tcss450.uw.edu.groupprojectapp.XMLtoJSON.JSONException;
 import group7.tcss450.uw.edu.groupprojectapp.XMLtoJSON.JSONObject;
@@ -42,7 +44,7 @@ public class Item implements Comparable<Item>, Serializable {
     }
 
     public static List<Item> ebayJsonToItems(String jsonString) {
-        ArrayList<Item> result = new ArrayList<Item>();
+        ArrayList<Item> result = new ArrayList<>();
         Item nextItem;
         try {
             JSONObject json1 = new JSONObject(jsonString);
@@ -100,7 +102,7 @@ public class Item implements Comparable<Item>, Serializable {
     }
 
     public static List<Item> amazonXMLtoItems(String xmlString) {
-        ArrayList<Item> result = new ArrayList<Item>();
+        ArrayList<Item> result = new ArrayList<>();
         Item nextItem;
         try {
             JSONObject json1 = XML.toJSONObject(xmlString, true);
@@ -169,7 +171,7 @@ public class Item implements Comparable<Item>, Serializable {
     }
 
     @Override
-    public int compareTo(Item other) {
+    public int compareTo(@NonNull Item other) {
 
         double thisPrice;
         double otherPrice;
@@ -207,4 +209,5 @@ public class Item implements Comparable<Item>, Serializable {
     public String getBestOfferEnabled() {return bestOfferEnabled;}
     public String getBuyItNow() {return buyItNow;}
     public Item getItem() {return this;}
+    public String getSource() {return source;}
 }

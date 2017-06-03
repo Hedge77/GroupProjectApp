@@ -14,7 +14,12 @@ import group7.tcss450.uw.edu.groupprojectapp.ItemFragment;
 import group7.tcss450.uw.edu.groupprojectapp.R;
 
 /**
- * Created by Andy on 2017. 5. 26..
+ * RecyclerAdapter
+ *
+ * This serializable class is for a list of items that are from the result.
+ *
+ * @author Jisu Shin
+ * @version 1.0
  */
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>{

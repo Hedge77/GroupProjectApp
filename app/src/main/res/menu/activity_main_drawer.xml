@@ -5,15 +5,11 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_menu_home"
-            android:title="Home" />
+            android:title="@string/drawer_item_home" />
         <item
             android:id="@+id/nav_history"
             android:icon="@android:drawable/ic_menu_recent_history"
-            android:title="Saved History" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:title="@string/drawer_item_history" />
     </group>
 
 </menu>

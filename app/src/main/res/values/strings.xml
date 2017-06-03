@@ -34,4 +34,7 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 
+    <string name="drawer_item_home">Home</string>
+    <string name="drawer_item_history">Saved History</string>
+
 </resources>

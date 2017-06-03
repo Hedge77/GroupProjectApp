@@ -2,6 +2,7 @@ package group7.tcss450.uw.edu.groupprojectapp;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +37,8 @@ public class ItemFragment extends Fragment {
 
     public void updateContent(Item item) {
         TextView tv = (TextView) getActivity().findViewById(R.id.dataview);
-//        tv.setText("Item: " + item.getTitle() + "\n" + "Price: " + item.getPrice() + "\n" +
-//                "" + item.getitem.getItemURL());
         tv.setText(item.toString());
+        Linkify.addLinks(tv, Linkify.WEB_URLS);
     }
 
     @Override
